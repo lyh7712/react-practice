@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import PropTypes from "prop-types";
 
-function App() {
+const foodArr = [
+  { id: 1, name: "malon", des: "green!!", "rating": 5 },
+  { id: 2, name: "apple", des: "red!!", "rating": 3.5 },
+  { id: 3, name: "raman", des: "white!!", "rating": 4.6 },
+  { id: 4, name: "taco", des: "been!!", "rating": 4.8 },
+];
+
+function Testing({ name, des, rating }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h3>
+      I like {name} {des}!!
+    </h3>
+    <h4>{rating} / 5.0</h4>
     </div>
   );
+}
+
+Testing.propTypes = {
+  name: PropTypes.string.isRequired,
+  des: PropTypes.string.isRequired,
+  rating: PropTypes.number.isRequired
+};
+
+function App() {
+  return foodArr.map((item) => (
+    <Testing key={item.id} name={item.name} des={item.des} rating={item.rating} />
+  ));
 }
 
 export default App;
