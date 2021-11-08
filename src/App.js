@@ -1,34 +1,56 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import axios from 'axios';
+import Movie from './Movie';
+import './App.css';
 
-const foodArr = [
-  { id: 1, name: "malon", des: "green!!", "rating": 5 },
-  { id: 2, name: "apple", des: "red!!", "rating": 3.5 },
-  { id: 3, name: "raman", des: "white!!", "rating": 4.6 },
-  { id: 4, name: "taco", des: "been!!", "rating": 4.8 },
-];
+class App extends React.Component {
+  state = {
+    isLoding: true,
+    movies: [],
+  };
 
-function Testing({ name, des, rating }) {
-  return (
-    <div>
-      <h3>
-      I like {name} {des}!!
-    </h3>
-    <h4>{rating} / 5.0</h4>
-    </div>
-  );
-}
+  getMovies = async () => {
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios.get(
+      'https://yts-proxy.nomadcoders1.now.sh/list_movies.json?sort_by=rating'
+    );
+    this.setState({ movies, isLoding: false });
+  };
 
-Testing.propTypes = {
-  name: PropTypes.string.isRequired,
-  des: PropTypes.string.isRequired,
-  rating: PropTypes.number.isRequired
-};
+  async componentDidMount() {
+    this.getMovies();
+  }
 
-function App() {
-  return foodArr.map((item) => (
-    <Testing key={item.id} name={item.name} des={item.des} rating={item.rating} />
-  ));
+  render() {
+    const { isLoding, movies } = this.state;
+    return (
+      <section class='container'>
+        {isLoding ? (
+          <div class='loader'>
+            <span class='loader__text'>'Loding...'</span>
+          </div>
+        ) : (
+          <div class='movies'>
+            {movies.map((movie) => {
+              return (
+                <Movie
+                  key={movie.id}
+                  id={movie.id}
+                  year={movie.year}
+                  title={movie.title}
+                  summary={movie.summary}
+                  poster={movie.medium_cover_image}
+                />
+              );
+            })}
+          </div>
+        )}
+      </section>
+    );
+  }
 }
 
 export default App;
